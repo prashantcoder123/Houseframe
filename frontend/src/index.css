@@ -1,0 +1,44 @@
+
+@import "tailwindcss";
+
+/* html, body, #root {
+  width: 100%;
+  min-height: 100%; */
+  /* overflow-x: hidden; */
+  /* margin: 0;
+  padding: 0;
+  background: #000000; 
+  
+} */
+/* ===== Glow Effects ===== */
+.glow-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.glow-card::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(
+    120deg,
+    #facc15,
+    #22d3ee,
+    #a855f7,
+    #facc15
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  filter: blur(18px);
+  z-index: -1;
+}
+
+.glow-card:hover::before {
+  opacity: 1;
+}
+.perspective-1000 {
+  perspective: 1000px;
+}
+.glow-btn {
+  box-shadow: 0 0 20px rgba(255, 200, 0, 0.5);
+}
