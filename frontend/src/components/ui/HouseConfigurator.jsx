@@ -4,6 +4,7 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { Villa } from "./House3D";
 import { motion } from "framer-motion";
+import { API_URL } from "../../config";
 
 export default function HouseConfigurator() {
   const [config, setConfig] = useState({
@@ -57,7 +58,7 @@ export default function HouseConfigurator() {
     setSaveLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/projects/save", {
+      const response = await fetch(`${API_URL}/api/projects/save`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

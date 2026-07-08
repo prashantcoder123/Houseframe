@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { API_URL } from "../config";
 
 export default function Dashboard() {
   const [projects, setProjects] = useState([]);
@@ -19,7 +20,7 @@ export default function Dashboard() {
 
     const fetchProjects = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/projects/my-projects", {
+        const response = await fetch(`${API_URL}/api/projects/my-projects`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -45,7 +46,7 @@ export default function Dashboard() {
     if (!window.confirm("Are you sure you want to delete this saved design?")) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/projects/${projectId}`, {
+      const response = await fetch(`${API_URL}/api/projects/${projectId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
