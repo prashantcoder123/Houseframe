@@ -268,14 +268,22 @@ I'd like to consult with your estimators for a final blueprint and quote.`;
                 </div>
               </div>
 
-              <a
-                href={getWhatsAppLink()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-3.5 bg-yellow-400 hover:bg-yellow-500 text-black font-extrabold text-center block rounded-xl transition-all shadow-md hover:shadow-yellow-400/20 text-xs uppercase mt-6 tracking-wide cursor-pointer"
-              >
-                💬 Get Final Certified Quotation
-              </a>
+              <div className="flex flex-col sm:flex-row gap-3 mt-6">
+                <button
+                  onClick={() => window.print()}
+                  className="flex-1 py-3.5 bg-slate-800 hover:bg-slate-700 text-white border border-white/10 rounded-xl font-bold transition-all text-xs uppercase tracking-wide cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  <span>📄 Print / Save PDF</span>
+                </button>
+                <a
+                  href={getWhatsAppLink()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 py-3.5 bg-yellow-400 hover:bg-yellow-500 text-black font-extrabold text-center block rounded-xl transition-all shadow-md hover:shadow-yellow-400/20 text-xs uppercase tracking-wide cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  <span>💬 WhatsApp Quote</span>
+                </a>
+              </div>
             </div>
 
             {/* DETAILED CIVIL MATERIAL BREAKDOWN */}
@@ -317,6 +325,45 @@ I'd like to consult with your estimators for a final blueprint and quote.`;
         </div>
 
       </div>
+      
+      {/* CSS Print Styles to format PDF report neatly */}
+      <style>{`
+        @media print {
+          body {
+            background: #ffffff !important;
+            color: #000000 !important;
+          }
+          nav, footer, button, input[type="range"], .pointer-events-none, .flex-col.sm\\:flex-row.gap-3, select, input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
+            display: none !important;
+          }
+          .min-h-screen {
+            min-height: auto !important;
+            background: #ffffff !important;
+            padding: 0 !important;
+          }
+          .bg-slate-900\\/35, .bg-slate-950\\/80, .bg-white\\/5 {
+            background: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            color: #0f172a !important;
+            box-shadow: none !important;
+          }
+          h1, h2, h3, h4, span, p {
+            color: #0f172a !important;
+            text-shadow: none !important;
+          }
+          .text-yellow-400 {
+            color: #b45309 !important; /* dark amber for print legibility */
+          }
+          .grid {
+            display: block !important;
+          }
+          .lg\\:col-span-7, .lg\\:col-span-5 {
+            width: 100% !important;
+            margin-bottom: 20px !important;
+            page-break-inside: avoid !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }

@@ -15,6 +15,7 @@ export default function Navbar() {
     { name: "3D Studio", path: "/#design-studio" },
     { name: "Projects", path: "/projects" },
     { name: "Estimator", path: "/estimator" },
+    { name: "Vastu", path: "/vastu" },
     { name: "Contact", path: "/contact" },
   ];
 

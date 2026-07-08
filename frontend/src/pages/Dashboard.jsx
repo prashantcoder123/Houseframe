@@ -283,6 +283,61 @@ export default function Dashboard() {
               )}
             </div>
 
+            {/* WEEKLY CONSTRUCTION PHOTO LOGGER */}
+            <div className="bg-slate-900/35 border border-white/10 rounded-3xl p-6 md:p-8 backdrop-blur-md">
+              <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                <span>📸</span> Weekly Site Progress Logs
+              </h2>
+              <p className="text-xs text-slate-400 mt-1 mb-6">
+                Photographic updates uploaded by your project manager.
+              </p>
+
+              <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
+                {[
+                  { title: "Excavation & Trenching", week: "Week 02", desc: "Site clearing and laying foundational footprints.", status: "completed" },
+                  { title: "Concrete Base Pouring", week: "Week 04", desc: "Pouring concrete footings and curing structure.", status: "completed" },
+                  { title: "Column Casing", week: "Week 06", desc: "Setting vertical steel pillars and column concrete.", status: "active" },
+                  { title: "Cantilever Casting", week: "Week 08", desc: "Casting the first floor cantilever overhang slabs.", status: "pending" },
+                ].map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="relative group bg-slate-950 border border-white/5 hover:border-yellow-400/20 rounded-2xl p-4 transition duration-300 flex flex-col justify-between"
+                  >
+                    <div>
+                      {/* Procedural Visual Card Graphic */}
+                      <div className="h-24 rounded-xl bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 border border-white/10 flex items-center justify-center relative overflow-hidden mb-3">
+                        <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f010_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f010_1px,transparent_1px)] bg-[size:10px_10px]" />
+                        <span className="text-3xl relative z-10 select-none">
+                          {idx === 0 ? "🚜" : idx === 1 ? "🧱" : idx === 2 ? "🏗️" : "🏠"}
+                        </span>
+                        
+                        {/* Status Badge on top of image */}
+                        <span
+                          className={`absolute top-2 right-2 text-[8px] font-bold px-2 py-0.5 rounded-full ${
+                            item.status === "completed"
+                              ? "bg-green-500/20 text-green-400 border border-green-500/30"
+                              : item.status === "active"
+                              ? "bg-yellow-400/20 text-yellow-400 border border-yellow-400/30 animate-pulse"
+                              : "bg-slate-900 text-slate-600 border border-white/5"
+                          }`}
+                        >
+                          {item.status.toUpperCase()}
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between items-center">
+                        <h4 className="text-xs font-bold text-slate-200">{item.title}</h4>
+                        <span className="text-[9px] font-mono text-yellow-400 font-bold">{item.week}</span>
+                      </div>
+                      <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">
+                        {item.desc}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
           </div>
 
           {/* RIGHT SECTION (BILLING / SUMMARY INFO) - 4 COLS */}
