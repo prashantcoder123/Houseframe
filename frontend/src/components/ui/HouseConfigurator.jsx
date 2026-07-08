@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { Villa } from "./House3D";
@@ -13,8 +14,73 @@ export default function HouseConfigurator() {
     constructionStage: "completed", // structure, enclosure, completed
   });
 
+  const [saveLoading, setSaveLoading] = useState(false);
+  const navigate = useNavigate();
+
+  // Retrieve user session data
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const token = localStorage.getItem("token");
+
+  // UX detail: Load design saved configuration if coming from Dashboard
+  useEffect(() => {
+    const loadedConfig = localStorage.getItem("loaded-config");
+    if (loadedConfig) {
+      try {
+        const parsed = JSON.parse(loadedConfig);
+        setConfig({
+          theme: parsed.theme || "modern",
+          colorTheme: parsed.colorTheme || "alabaster",
+          wireframe: parsed.wireframe !== undefined ? parsed.wireframe : false,
+          dayMode: parsed.dayMode !== undefined ? parsed.dayMode : true,
+          constructionStage: parsed.constructionStage || "completed",
+        });
+        localStorage.removeItem("loaded-config");
+      } catch (err) {
+        console.error("Failed to parse loaded config", err);
+      }
+    }
+  }, []);
+
   const handleConfigChange = (key, value) => {
     setConfig((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleSaveProject = async () => {
+    if (!token || !user) {
+      navigate("/login");
+      return;
+    }
+
+    const name = prompt("Name your custom blueprint design layout:", "My Custom Villa Design");
+    if (name === null) return; // User canceled the prompt
+
+    setSaveLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:5000/api/projects/save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          name: name.trim() || "My Custom Villa Design",
+          ...config,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to save design.");
+      }
+
+      alert("🎉 Your design blueprint has been saved! You can view it in your dashboard.");
+    } catch (err) {
+      alert("❌ Error: " + err.message);
+    } finally {
+      setSaveLoading(false);
+    }
   };
 
   // Details to show on selected options
@@ -282,8 +348,35 @@ export default function HouseConfigurator() {
               </div>
             </div>
 
-            {/* CTA BOOKING DETAILS */}
-            <div className="pt-4 border-t border-white/10">
+            {/* CTA BOOKING & SAVING DETAILS */}
+            <div className="pt-4 border-t border-white/10 space-y-3">
+              {/* Save layout config button */}
+              {user ? (
+                <button
+                  onClick={handleSaveProject}
+                  disabled={saveLoading}
+                  className="w-full py-3 bg-slate-900 border border-yellow-400/30 hover:border-yellow-400 text-yellow-400 hover:bg-yellow-400/10 rounded-xl font-bold transition shadow-md text-xs cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  {saveLoading ? (
+                    <>
+                      <div className="w-3.5 h-3.5 border-2 border-yellow-400 border-t-transparent rounded-full animate-spin"></div>
+                      <span>Saving Layout...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>💾 Save Blueprint to Account</span>
+                    </>
+                  )}
+                </button>
+              ) : (
+                <button
+                  onClick={() => navigate("/login")}
+                  className="w-full py-3 bg-slate-900/50 border border-white/10 text-slate-400 hover:text-white rounded-xl font-bold transition text-xs cursor-pointer"
+                >
+                  🔒 Login to Save Layout
+                </button>
+              )}
+
               <a
                 href={`https://wa.me/7367055728?text=Hi%20HouseFrame!%20I%20just%20configured%20my%20dream%20home%20style%20as%20${themesInfo[config.theme].title}%20in%20${colorsInfo[config.colorTheme].name}%20using%20your%203D%20Studio!%20I'd%2520like%20to%20discuss%20construction%20costing.`}
                 target="_blank"
@@ -292,7 +385,7 @@ export default function HouseConfigurator() {
               >
                 📋 Book Free Construction Quote
               </a>
-              <p className="text-[10px] text-slate-500 text-center mt-2">
+              <p className="text-[10px] text-slate-500 text-center">
                 Sends your 3D configuration direct to our structural estimators.
               </p>
             </div>
