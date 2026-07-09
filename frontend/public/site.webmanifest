@@ -1,0 +1,14 @@
+{
+  "name": "HouseFrame Construction & Design",
+  "short_name": "HouseFrame",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "theme_color": "#0B0F19",
+  "background_color": "#0B0F19",
+  "display": "standalone"
+}
