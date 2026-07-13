@@ -73,9 +73,16 @@ export default function Navbar() {
       {/* LOGO */}
       <Link
         to="/"
-        className="flex items-center gap-2 text-xl md:text-2xl font-bold tracking-wide hover:opacity-90 animate-pulse-subtle"
+        className="flex items-center gap-3 text-xl md:text-2xl font-bold tracking-wide hover:opacity-90 transition-all duration-300"
       >
-        🏗️ <span className="bg-gradient-to-r from-yellow-400 via-yellow-200 to-white bg-clip-text text-transparent">Houseframe</span>
+        <img
+          src="/logo.png"
+          alt="Houseframe Logo"
+          className="h-9 w-9 object-contain rounded-lg border border-white/10 shadow-lg"
+        />
+        <span className="bg-gradient-to-r from-yellow-400 via-yellow-200 to-white bg-clip-text text-transparent font-black tracking-wider uppercase text-lg md:text-xl">
+          Houseframe
+        </span>
       </Link>
 
       {/* DESKTOP MENU */}

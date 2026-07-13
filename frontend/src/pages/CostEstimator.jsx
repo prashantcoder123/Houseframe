@@ -3,19 +3,25 @@ import { motion } from "framer-motion";
 
 export default function CostEstimator() {
   const [area, setArea] = useState(1500); // Built-up area in sq. ft.
-  const [quality, setQuality] = useState("premium"); // standard, premium, luxury
+  const [quality, setQuality] = useState("premium"); // basic, standard, premium, luxury
   const [floors, setFloors] = useState(1); // 1, 2, 3 floors
   const [addons, setAddons] = useState({
     pool: false,
     solar: false,
     smartHome: false,
   });
+  const [addonTiers, setAddonTiers] = useState({
+    pool: "premium",      // basic, premium, luxury
+    solar: "premium",
+    smartHome: "premium",
+  });
 
   // Cost configurations
   const packageRates = {
-    standard: 1500, // ₹ per sq. ft.
-    premium: 2200,
-    luxury: 3200,
+    basic: 1899,       // ₹ per sq. ft.
+    standard: 2299,
+    premium: 2799,
+    luxury: 3499,
   };
 
   const floorMultipliers = {
@@ -25,29 +31,41 @@ export default function CostEstimator() {
   };
 
   const addonPrices = {
-    pool: 400000,      // ₹4 Lakhs
-    solar: 250000,     // ₹2.5 Lakhs
-    smartHome: 180000, // ₹1.8 Lakhs
+    pool: {
+      basic: 800000,      // ₹8 Lakhs
+      premium: 1200000,   // ₹12 Lakhs
+      luxury: 1800000,    // ₹18 Lakhs
+    },
+    solar: {
+      basic: 190000,      // ₹1.9 Lakhs
+      premium: 275000,    // ₹2.75 Lakhs
+      luxury: 520000,     // ₹5.2 Lakhs
+    },
+    smartHome: {
+      basic: 200000,      // ₹2 Lakhs
+      premium: 350000,    // ₹3.5 Lakhs
+      luxury: 550000,     // ₹5.5 Lakhs
+    },
   };
 
   // Calculations
   const baseCost = area * packageRates[quality] * floorMultipliers[floors];
   
   const selectedAddonsCost = 
-    (addons.pool ? addonPrices.pool : 0) +
-    (addons.solar ? addonPrices.solar : 0) +
-    (addons.smartHome ? addonPrices.smartHome : 0);
+    (addons.pool ? addonPrices.pool[addonTiers.pool] : 0) +
+    (addons.solar ? addonPrices.solar[addonTiers.solar] : 0) +
+    (addons.smartHome ? addonPrices.smartHome[addonTiers.smartHome] : 0);
 
   const totalCost = baseCost + selectedAddonsCost;
 
   // Breakdown percentages
   const breakdownRatio = {
-    labor: 0.30,      // 30%
-    finishes: 0.22,   // 22%
-    cement: 0.16,     // 16%
-    steel: 0.14,      // 14%
-    architect: 0.10,  // 10%
-    sand: 0.08,       // 8%
+    cement: 0.28,     // Cement, Bricks & Masonry (28%)
+    labor: 0.25,      // Labor & Engineering (25%)
+    steel: 0.15,      // Steel Reinforcement (15%)
+    finishes: 0.20,   // Finishing & Woodwork (20%)
+    electrical: 0.08, // Electrical & Plumbing (8%)
+    architect: 0.04,  // Structural Design & Architecture (4%)
   };
 
   // Formatter helper
@@ -65,11 +83,21 @@ export default function CostEstimator() {
 
   // WhatsApp template dispatch
   const getWhatsAppLink = () => {
+    const addonsList = Object.keys(addons)
+      .filter((k) => addons[k])
+      .map((k) => {
+        const name = k === "pool" ? "Pool" : k === "solar" ? "Solar" : "Smart Home";
+        const tier = addonTiers[k].toUpperCase();
+        const price = formatCurrency(addonPrices[k][addonTiers[k]]);
+        return `${name} (${tier} - ${price})`;
+      })
+      .join(", ") || "None";
+
     const text = `Hello HouseFrame! I just calculated my estimated construction costing using your website Estimator:
 - *Area:* ${area} Sq. Ft.
 - *Quality Package:* ${quality.toUpperCase()} (${formatCurrency(packageRates[quality])}/sq.ft)
 - *Floors:* ${floors} Floor(s)
-- *Add-ons:* ${Object.keys(addons).filter(k => addons[k]).map(k => k === 'pool' ? 'Pool' : k === 'solar' ? 'Solar' : 'Smart Home').join(', ') || 'None'}
+- *Add-ons:* ${addonsList}
 - *Estimated Construction Cost:* ${formatCurrency(totalCost)}
 
 I'd like to consult with your estimators for a final blueprint and quote.`;
@@ -145,32 +173,39 @@ I'd like to consult with your estimators for a final blueprint and quote.`;
               <h3 className="text-sm font-bold text-yellow-400 uppercase tracking-wider">
                 2. Material & Finish Quality Package
               </h3>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {[
-                  { id: "standard", name: "Standard", rate: "₹1,500" },
-                  { id: "premium", name: "Premium", rate: "₹2,200" },
-                  { id: "luxury", name: "Luxury", rate: "₹3,200" },
+                  { id: "basic", name: "Basic", rate: "₹1,899", range: "₹1,700 - ₹2,000" },
+                  { id: "standard", name: "Standard", rate: "₹2,299", range: "₹2,100 - ₹2,500" },
+                  { id: "premium", name: "Premium", rate: "₹2,799", range: "₹2,600 - ₹3,200" },
+                  { id: "luxury", name: "Luxury", rate: "₹3,499", range: "₹3,300 - ₹4,500+" },
                 ].map((pkg) => (
                   <button
                     key={pkg.id}
                     onClick={() => setQuality(pkg.id)}
-                    className={`p-4 rounded-xl border text-center transition-all duration-300 cursor-pointer flex flex-col items-center justify-center gap-1 ${
+                    className={`p-3 rounded-xl border text-center transition-all duration-300 cursor-pointer flex flex-col items-center justify-center gap-1 ${
                       quality === pkg.id
                         ? "bg-yellow-400 text-black border-yellow-400 shadow-md shadow-yellow-400/25"
                         : "bg-slate-950/60 border-white/5 hover:bg-slate-950 hover:border-white/20 text-slate-300"
                     }`}
                   >
                     <span className="text-xs font-black uppercase tracking-wider">{pkg.name}</span>
-                    <span className="text-[10px] opacity-75 font-mono">{pkg.rate}/sq.ft</span>
+                    <span className="text-[10px] font-bold font-mono">{pkg.rate}/sq.ft</span>
+                    <span className="text-[8px] opacity-75 font-mono">{pkg.range}</span>
                   </button>
                 ))}
               </div>
 
               {/* Package Details Banner */}
               <div className="bg-white/5 border border-white/5 rounded-xl p-4 text-xs leading-relaxed text-slate-300">
+                {quality === "basic" && (
+                  <p>
+                    🔨 **Includes:** Standard structural concrete framework, local brickwork, standard vitrified floor tiles, branded local wiring, and standard PVC plumbing lines.
+                  </p>
+                )}
                 {quality === "standard" && (
                   <p>
-                    🔨 **Includes:** Basic structural concrete framework, local brickwork, standard vitrified floor tiles, branded local wiring, and standard PVC plumbing lines.
+                    🧱 **Includes:** Reinforced concrete framing, high-quality brickwork, vitrified floor tiles, modular electrical switches, branded PVC plumbing.
                   </p>
                 )}
                 {quality === "premium" && (
@@ -211,29 +246,103 @@ I'd like to consult with your estimators for a final blueprint and quote.`;
             {/* ADDOB INCLUSIONS */}
             <div className="space-y-4 border-t border-white/10 pt-6">
               <h3 className="text-sm font-bold text-yellow-400 uppercase tracking-wider">
-                4. Additional Structural Inclusions
+                4. Premium Add-on Options
               </h3>
-              <div className="grid sm:grid-cols-3 gap-3">
+              <div className="grid md:grid-cols-3 gap-4">
                 {[
-                  { id: "pool", label: "🏊 Swimming Pool", price: addonPrices.pool },
-                  { id: "solar", label: "☀️ Eco Solar Grid", price: addonPrices.solar },
-                  { id: "smartHome", label: "🔒 Smart Home Sys.", price: addonPrices.smartHome },
-                ].map((add) => (
-                  <button
-                    key={add.id}
-                    onClick={() => handleAddonChange(add.id)}
-                    className={`p-3 rounded-xl border text-left transition duration-300 flex flex-col justify-between h-[82px] cursor-pointer ${
-                      addons[add.id]
-                        ? "bg-cyan-500/10 border-cyan-400 text-cyan-200"
-                        : "bg-slate-950/60 border-white/5 text-slate-400 hover:border-white/10"
-                    }`}
-                  >
-                    <span className="text-[11px] font-bold">{add.label}</span>
-                    <span className="text-[9px] font-mono opacity-85 block mt-2 text-slate-400">
-                      +{formatCurrency(add.price)}
-                    </span>
-                  </button>
-                ))}
+                  { 
+                    id: "solar", 
+                    label: "☀️ Eco Solar Grid", 
+                    details: {
+                      basic: "Basic (3 kW Grid)",
+                      premium: "Premium (5 kW On-Grid)",
+                      luxury: "Luxury (10 kW Hybrid)"
+                    }
+                  },
+                  { 
+                    id: "smartHome", 
+                    label: "🔒 Smart Home Sys.", 
+                    details: {
+                      basic: "Basic (App Lights/Fans)",
+                      premium: "Premium (Full Automation)",
+                      luxury: "Luxury (IoT + Security)"
+                    }
+                  },
+                  { 
+                    id: "pool", 
+                    label: "🏊 Swimming Pool", 
+                    details: {
+                      basic: "Basic (Small 10x20 ft)",
+                      premium: "Premium (12x24 ft RCC)",
+                      luxury: "Luxury (Infinity Pool)"
+                    }
+                  },
+                ].map((add) => {
+                  const isSelected = addons[add.id];
+                  const currentTier = addonTiers[add.id];
+                  return (
+                    <div 
+                      key={add.id}
+                      className={`p-4 rounded-2xl border transition-all duration-300 flex flex-col justify-between space-y-3 ${
+                        isSelected 
+                          ? "bg-slate-900/90 border-cyan-500/50 shadow-md shadow-cyan-500/5 text-cyan-200"
+                          : "bg-slate-950/60 border-white/5 text-slate-400 hover:border-white/10"
+                      }`}
+                    >
+                      {/* Top row: Checkbox + Title */}
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-slate-100">{add.label}</span>
+                        <input 
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => handleAddonChange(add.id)}
+                          className="w-4 h-4 rounded text-cyan-500 bg-slate-950 border-white/10 focus:ring-cyan-500 cursor-pointer"
+                        />
+                      </div>
+
+                      {/* Middle: Selected price or tier label */}
+                      <div className="h-6 flex items-center justify-between">
+                        {isSelected ? (
+                          <span className="text-xs font-bold text-cyan-400">
+                            {formatCurrency(addonPrices[add.id][currentTier])}
+                          </span>
+                        ) : (
+                          <span className="text-[10px] text-slate-500">Not selected</span>
+                        )}
+                      </div>
+
+                      {/* Bottom: Tier Selector (only interactive if selected) */}
+                      <div className="grid grid-cols-3 gap-1 bg-slate-950/85 p-1 rounded-xl border border-white/5">
+                        {["basic", "premium", "luxury"].map((tier) => {
+                          const isActive = isSelected && currentTier === tier;
+                          return (
+                            <button
+                              key={tier}
+                              disabled={!isSelected}
+                              onClick={() => setAddonTiers(prev => ({ ...prev, [add.id]: tier }))}
+                              className={`py-1 text-[9px] font-black uppercase rounded-lg transition-all ${
+                                !isSelected 
+                                  ? "text-slate-600 cursor-not-allowed opacity-50"
+                                  : isActive 
+                                    ? "bg-cyan-500 text-black font-black"
+                                    : "text-slate-400 hover:text-slate-200 cursor-pointer"
+                              }`}
+                            >
+                              {tier}
+                            </button>
+                          );
+                        })}
+                      </div>
+                      
+                      {/* Short Tier Description */}
+                      {isSelected && (
+                        <div className="text-[9px] text-slate-400 italic">
+                          {add.details[currentTier]}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -294,12 +403,12 @@ I'd like to consult with your estimators for a final blueprint and quote.`;
               
               <div className="space-y-4">
                 {[
-                  { name: "Labor & Engineering Works", ratio: breakdownRatio.labor, color: "bg-amber-400" },
-                  { name: "Finishing & Woodwork", ratio: breakdownRatio.finishes, color: "bg-green-400" },
                   { name: "Cement, Bricks & Masonry", ratio: breakdownRatio.cement, color: "bg-blue-400" },
-                  { name: "Steel Reinforcements", ratio: breakdownRatio.steel, color: "bg-rose-400" },
-                  { name: "Structural Architecture & Design", ratio: breakdownRatio.architect, color: "bg-pink-400" },
-                  { name: "Sand & Stone Aggregates", ratio: breakdownRatio.sand, color: "bg-purple-400" },
+                  { name: "Labor & Engineering Works", ratio: breakdownRatio.labor, color: "bg-amber-400" },
+                  { name: "Steel Reinforcement", ratio: breakdownRatio.steel, color: "bg-rose-400" },
+                  { name: "Finishing & Woodwork", ratio: breakdownRatio.finishes, color: "bg-green-400" },
+                  { name: "Electrical & Plumbing", ratio: breakdownRatio.electrical, color: "bg-cyan-400" },
+                  { name: "Structural Design & Architecture", ratio: breakdownRatio.architect, color: "bg-pink-400" },
                 ].map((item, idx) => {
                   const val = totalCost * item.ratio;
                   return (

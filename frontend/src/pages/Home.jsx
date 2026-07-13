@@ -68,7 +68,7 @@ export default function Home() {
               {[
                 { label: "Projects", value: "120+" },
                 { label: "Happy Clients", value: "300+" },
-                { label: "Years Experience", value: "8+" },
+                { label: "Years Experience", value: "2+" },
               ].map((stat, i) => (
                 <div
                   key={i}
@@ -123,7 +123,7 @@ export default function Home() {
         <Testimonials />
       </section>
       <section id="stats">
-       <Stats />
+        <Stats />
       </section>
     </>
   );

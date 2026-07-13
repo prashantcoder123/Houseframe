@@ -34,7 +34,7 @@ export default function Projects() {
 
   return (
     <section className="px-6 md:px-20 py-24 bg-gradient-to-b from-black/0 to-black/30">
-      
+
       {/* HEADER */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -55,7 +55,7 @@ export default function Projects() {
         {[
           { label: "Happy Clients", value: "120+" },
           { label: "Projects Delivered", value: "85+" },
-          { label: "Years Experience", value: "12+" },
+          { label: "Years Experience", value: "2+" },
           { label: "Trusted Partners", value: "30+" },
         ].map((stat, i) => (
           <motion.div

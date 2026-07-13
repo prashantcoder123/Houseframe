@@ -77,6 +77,47 @@ export default function About() {
         ))}
       </div>
 
+      {/* FOUNDER & CEO SECTION */}
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+        className="mt-24 bg-slate-900/35 border border-white/10 rounded-3xl p-8 md:p-12 max-w-5xl mx-auto backdrop-blur-md relative overflow-hidden"
+      >
+        {/* Glow */}
+        <div className="absolute top-[-100px] right-[-100px] w-[300px] h-[300px] bg-yellow-500/10 rounded-full blur-[80px] pointer-events-none" />
+
+        <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-center">
+          {/* IMAGE */}
+          <div className="w-48 h-48 md:w-60 md:h-60 rounded-2xl overflow-hidden border border-yellow-400/35 shadow-lg shadow-yellow-500/5 flex-shrink-0 relative group">
+            <img 
+              src="/founder.png" 
+              alt="Sachin Kumar - Founder & CEO" 
+              className="w-full h-full object-cover object-top transition duration-500 group-hover:scale-110" 
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end justify-center pb-4">
+              <span className="text-[10px] text-yellow-400 font-bold uppercase tracking-widest">Sachin Kumar</span>
+            </div>
+          </div>
+
+          {/* TEXT CONTENT */}
+          <div className="space-y-4 text-center md:text-left flex-1">
+            <span className="px-3 py-1 text-[10px] rounded-full bg-yellow-400/20 text-yellow-300 font-bold tracking-wider uppercase">
+              Leadership
+            </span>
+            <h2 className="text-2xl md:text-3xl font-extrabold text-white">
+              Sachin Kumar
+            </h2>
+            <p className="text-sm font-semibold text-yellow-400 uppercase tracking-wider">
+              Founder & CEO, Houseframe
+            </p>
+            <p className="text-sm text-slate-300 leading-relaxed">
+              Under Sachin Kumar's leadership, HouseFrame Design & Construction Pvt. Ltd. has integrated modern architectural design, vastu compliance, and real-time 3D simulation tools to make premium building planning accessible and transparent across India. He directs the strategic expansion and engineering execution of residential, commercial, and public infrastructure projects.
+            </p>
+          </div>
+        </div>
+      </motion.div>
+
       {/* OPTIONAL 3D EMBED */}
       {/* <div className="mt-20 flex justify-center">
         <iframe
