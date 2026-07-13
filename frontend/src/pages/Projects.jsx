@@ -53,10 +53,10 @@ export default function Projects() {
       {/* TRUST COUNTERS */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto mb-16">
         {[
-          { label: "Happy Clients", value: "120+" },
-          { label: "Projects Delivered", value: "85+" },
+          { label: "Happy Clients", value: "50+" },
+          { label: "Projects Delivered", value: "50+" },
           { label: "Years Experience", value: "2+" },
-          { label: "Trusted Partners", value: "30+" },
+          { label: "Trusted Partners", value: "50+" },
         ].map((stat, i) => (
           <motion.div
             key={i}
