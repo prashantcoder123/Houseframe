@@ -43,7 +43,7 @@ export default function Contact() {
 
           {/* QUICK ACTION */}
           <a
-            href="https://wa.me/7367049049"
+            href="https://wa.me/7033822316"
             target="_blank"
             className="block text-center text-sm text-green-400 hover:underline"
           >

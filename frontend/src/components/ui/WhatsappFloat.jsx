@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 export default function WhatsappFloat() {
   return (
     <motion.a
-      href="https://wa.me/7367049049"
+      href="https://wa.me/7033822316"
       target="_blank"
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}

@@ -102,7 +102,7 @@ export default function CostEstimator() {
 
 I'd like to consult with your estimators for a final blueprint and quote.`;
 
-    return `https://wa.me/7367055728?text=${encodeURIComponent(text)}`;
+    return `https://wa.me/7033822316?text=${encodeURIComponent(text)}`;
   };
 
   return (

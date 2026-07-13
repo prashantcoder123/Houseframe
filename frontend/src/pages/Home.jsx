@@ -55,7 +55,7 @@ export default function Home() {
 
               {/* FREE CONSULTATION */}
               <a
-                href="https://wa.me/7367055728?text=Hello%20HouseFrame,%20I%20want%20free%20consultation%20for%20construction."
+                href="https://wa.me/7033822316?text=Hello%20HouseFrame,%20I%20want%20free%20consultation%20for%20construction."
                 target="_blank"
                 className="px-6 py-3 border border-white/30 rounded-lg hover:bg-white/10 hover:scale-105 transition text-center"
               >
