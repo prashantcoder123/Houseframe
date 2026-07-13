@@ -3,13 +3,13 @@ import { motion } from "framer-motion";
 const corporateDetails = [
   { label: "Company Name", value: "HOUSEFRAME DESIGNING PRIVATE LIMITED", icon: "🏢" },
   { label: "CIN (Corporate Identification Number)", value: "U43299BR2025PTC075956", icon: "🆔" },
-  { label: "Date of Incorporation", value: "10-05-2025", icon: "📅" },
+  // { label: "Date of Incorporation", value: "10-05-2025", icon: "📅" },
   { label: "Registration Number", value: "075956", icon: "🔢" },
   { label: "Company Category", value: "Company limited by shares", icon: "📊" },
   { label: "Company SubCategory", value: "Non-government company", icon: "🏛️" },
   { label: "Class of Company", value: "Private", icon: "👥" },
-  { label: "Authorised Capital", value: "₹5,00,000", icon: "💰" },
-  { label: "Paid up Capital", value: "₹10,000", icon: "💳" },
+  // { label: "Authorised Capital", value: "₹5,00,000", icon: "💰" },
+  // { label: "Paid up Capital", value: "₹10,000", icon: "💳" },
   { label: "Official Email ID", value: "hoseframe150@gmail.com", icon: "✉️", link: "mailto:hoseframe150@gmail.com" },
   { label: "Registered Address", value: "Plot No- 321, Gautam Nagar, Mastipur, Bodhgaya, Gaya, Bihar - 824231, India", icon: "📍", colSpan: true },
 ];
@@ -120,9 +120,8 @@ export default function Contact() {
               <motion.div
                 key={idx}
                 whileHover={{ y: -3, backgroundColor: "rgba(255, 255, 255, 0.05)" }}
-                className={`bg-white/[0.02] border border-white/5 rounded-2xl p-5 transition-all duration-300 ${
-                  detail.colSpan ? "md:col-span-2 lg:col-span-3" : ""
-                }`}
+                className={`bg-white/[0.02] border border-white/5 rounded-2xl p-5 transition-all duration-300 ${detail.colSpan ? "md:col-span-2 lg:col-span-3" : ""
+                  }`}
               >
                 <div className="flex items-start gap-4">
                   <div className="text-2xl p-2.5 rounded-xl bg-white/5 text-yellow-400 border border-white/10 flex-shrink-0">
