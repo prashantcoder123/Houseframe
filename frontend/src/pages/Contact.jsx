@@ -1,5 +1,19 @@
 import { motion } from "framer-motion";
 
+const corporateDetails = [
+  { label: "Company Name", value: "HOUSEFRAME DESIGNING PRIVATE LIMITED", icon: "🏢" },
+  { label: "CIN (Corporate Identification Number)", value: "U43299BR2025PTC075956", icon: "🆔" },
+  { label: "Date of Incorporation", value: "10-05-2025", icon: "📅" },
+  { label: "Registration Number", value: "075956", icon: "🔢" },
+  { label: "Company Category", value: "Company limited by shares", icon: "📊" },
+  { label: "Company SubCategory", value: "Non-government company", icon: "🏛️" },
+  { label: "Class of Company", value: "Private", icon: "👥" },
+  { label: "Authorised Capital", value: "₹5,00,000", icon: "💰" },
+  { label: "Paid up Capital", value: "₹10,000", icon: "💳" },
+  { label: "Official Email ID", value: "hoseframe150@gmail.com", icon: "✉️", link: "mailto:hoseframe150@gmail.com" },
+  { label: "Registered Address", value: "Plot No- 321, Gautam Nagar, Mastipur, Bodhgaya, Gaya, Bihar - 824231, India", icon: "📍", colSpan: true },
+];
+
 export default function Contact() {
   return (
     <section className="px-6 md:px-20 py-28 bg-gradient-to-b from-white/5 to-black/20">
@@ -65,6 +79,79 @@ export default function Contact() {
         </motion.div>
 
       </div>
+
+      {/* CORPORATE REGISTRATION DETAILS */}
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        viewport={{ once: true }}
+        className="max-w-6xl mx-auto mt-20"
+      >
+        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-10 shadow-2xl relative overflow-hidden">
+          {/* Subtle Glow */}
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-yellow-500/10 rounded-full blur-[100px] pointer-events-none" />
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none" />
+
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-6 mb-8 gap-4">
+            <div>
+              <h2 className="text-xl md:text-2xl font-bold flex items-center gap-2 text-white">
+                <span className="text-yellow-400">🏛️</span> Corporate Registration Details
+              </h2>
+              <p className="text-gray-400 text-xs md:text-sm mt-1">
+                Official Ministry of Corporate Affairs (MCA) verification details
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="px-3 py-1 text-xs rounded-full bg-green-500/25 text-green-400 border border-green-500/30 font-semibold tracking-wide flex items-center gap-1.5 animate-pulse">
+                <span className="w-1.5 h-1.5 bg-green-400 rounded-full"></span>
+                Active (RoC-Patna)
+              </span>
+              <span className="text-[10px] md:text-xs text-gray-500 bg-white/5 px-2.5 py-1 rounded-md border border-white/5">
+                Last Updated: 05-09-2025
+              </span>
+            </div>
+          </div>
+
+          {/* Grid Layout */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {corporateDetails.map((detail, idx) => (
+              <motion.div
+                key={idx}
+                whileHover={{ y: -3, backgroundColor: "rgba(255, 255, 255, 0.05)" }}
+                className={`bg-white/[0.02] border border-white/5 rounded-2xl p-5 transition-all duration-300 ${
+                  detail.colSpan ? "md:col-span-2 lg:col-span-3" : ""
+                }`}
+              >
+                <div className="flex items-start gap-4">
+                  <div className="text-2xl p-2.5 rounded-xl bg-white/5 text-yellow-400 border border-white/10 flex-shrink-0">
+                    {detail.icon}
+                  </div>
+                  <div className="space-y-1 min-w-0">
+                    <span className="text-[11px] font-semibold tracking-wider text-gray-500 uppercase block">
+                      {detail.label}
+                    </span>
+                    {detail.link ? (
+                      <a
+                        href={detail.link}
+                        className="text-yellow-400 hover:text-yellow-300 font-medium text-sm md:text-base break-words transition-colors flex items-center gap-1"
+                      >
+                        {detail.value}
+                        <span className="text-xs">↗</span>
+                      </a>
+                    ) : (
+                      <span className="text-gray-200 font-medium text-sm md:text-base break-words block">
+                        {detail.value}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.div>
     </section>
   );
 }
