@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Html } from "@react-three/drei";
 import * as THREE from "three";
+import TiltCard from "./TildCard";
 
 // A floating card/annotation indicator
 function Annotation({ position, title, description, activeTag, setActiveTag, id }) {
@@ -466,69 +467,223 @@ function Villa({ activeTag, setActiveTag, configOptions = {} }) {
   );
 }
 
+// Realistic Render View with interactive 3D hotspots
+function RenderView({ activeTag, setActiveTag }) {
+  const hotspots = [
+    {
+      id: "1",
+      title: "Premium Structural Glass",
+      description: "Vastu-integrated French glass doors. Restores direct ambient sunlight & optimizes thermal cooling coefficients.",
+      x: "21%",
+      y: "48%",
+      popupPosition: "right",
+    },
+    {
+      id: "2",
+      title: "Vastu Entrance Portal",
+      description: "Exquisite entrance aligned precisely with directional orientation (Ishanya corner) for positive aura & ventilation.",
+      x: "62%",
+      y: "78%",
+      popupPosition: "left",
+    },
+    {
+      id: "3",
+      title: "Cedar Balcony Deck",
+      description: "Sustainable timber deck with reinforced glass-steel railings. Features structural cantilevering.",
+      x: "48%",
+      y: "53%",
+      popupPosition: "right",
+    },
+    {
+      id: "4",
+      title: "Eco Solar Array",
+      description: "High-yield solar roofing grid generating zero-emission electricity to support independent green off-grid living.",
+      x: "45%",
+      y: "25%",
+      popupPosition: "right",
+    },
+  ];
+
+  return (
+    <div className="relative w-full h-full flex items-center justify-center bg-slate-950/80 p-4">
+      {/* 3D Tilt Card Wrapper */}
+      <div className="w-full max-w-4xl max-h-full">
+        <TiltCard>
+          <div 
+            className="relative w-full overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-slate-900"
+            style={{ 
+              aspectRatio: "1024 / 538",
+              transformStyle: "preserve-3d" 
+            }}
+          >
+            {/* The Image */}
+            <img
+              src="/house_render.jpg"
+              alt="HouseFrame Realistic 3D Render"
+              className="w-full h-full object-cover select-none pointer-events-none"
+              style={{ transform: "translateZ(0px)" }}
+            />
+
+            {/* Subtle overlay shading */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+
+            {/* Hotspots */}
+            {hotspots.map((spot) => {
+              const isOpen = activeTag === spot.id;
+              return (
+                <div
+                  key={spot.id}
+                  style={{ 
+                    left: spot.x, 
+                    top: spot.y,
+                    transform: "translate3d(-50%, -50%, 25px)",
+                    transformStyle: "preserve-3d"
+                  }}
+                  className="absolute z-20"
+                >
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveTag(isOpen ? null : spot.id);
+                    }}
+                    className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs shadow-lg transition-all duration-300 transform hover:scale-125 ${
+                      isOpen
+                        ? "bg-yellow-400 text-black scale-110 ring-4 ring-yellow-400/30"
+                        : "bg-black/80 text-yellow-400 border border-yellow-400 hover:bg-yellow-400 hover:text-black"
+                    }`}
+                  >
+                    {spot.id}
+                  </button>
+
+                  {/* Popup Annotation */}
+                  {isOpen && (
+                    <div
+                      style={{ transform: "translateZ(35px)" }}
+                      className={`absolute ${
+                        spot.popupPosition === "left"
+                          ? "right-8 top-1/2 -translate-y-1/2"
+                          : "left-8 top-1/2 -translate-y-1/2"
+                      } w-64 bg-slate-900/95 backdrop-blur-md border border-yellow-400/40 p-4 rounded-xl shadow-2xl text-white z-50 animate-fade-in`}
+                    >
+                      <h4 className="font-bold text-sm text-yellow-400 flex items-center gap-1.5">
+                        <span>📍</span> {spot.title}
+                      </h4>
+                      <p className="text-xs text-slate-300 mt-1.5 leading-relaxed">
+                        {spot.description}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </TiltCard>
+      </div>
+    </div>
+  );
+}
+
 // Standard responsive wrapper component with details
 export default function House3D() {
+  const [viewMode, setViewMode] = useState("render"); // "render" or "blueprint"
   const [activeTag, setActiveTag] = useState(null);
   const [isRotating, setIsRotating] = useState(true);
 
   return (
     <div className="relative w-full h-[350px] md:h-[580px] rounded-3xl bg-slate-950/40 border border-white/10 backdrop-blur-md overflow-hidden group shadow-2xl">
       
-      {/* 3D Canvas */}
-      <Canvas
-        shadows
-        camera={{ position: [6, 4, 8], fov: 42 }}
-        className="w-full h-full cursor-grab active:cursor-grabbing"
-      >
-        {/* Lights */}
-        <ambientLight intensity={1.2} />
-        <directionalLight
-          position={[10, 15, 10]}
-          intensity={2.0}
-          castShadow
-          shadow-mapSize-width={2048}
-          shadow-mapSize-height={2048}
-          shadow-bias={-0.0001}
-        />
-        <pointLight position={[-10, 8, -10]} intensity={0.5} />
+      {/* Toggle between Render and Blueprint */}
+      <div className="absolute top-4 right-4 z-30 flex gap-2">
+        <button
+          onClick={() => {
+            setViewMode("render");
+            setActiveTag(null);
+          }}
+          className={`px-3 py-1.5 text-[10px] md:text-xs font-semibold rounded-lg border transition-all ${
+            viewMode === "render"
+              ? "bg-yellow-400 text-black border-yellow-400 shadow-lg shadow-yellow-500/20"
+              : "bg-slate-900/80 text-white border-white/10 hover:bg-slate-800"
+          }`}
+        >
+          Realistic Render
+        </button>
+        <button
+          onClick={() => {
+            setViewMode("blueprint");
+            setActiveTag(null);
+          }}
+          className={`px-3 py-1.5 text-[10px] md:text-xs font-semibold rounded-lg border transition-all ${
+            viewMode === "blueprint"
+              ? "bg-yellow-400 text-black border-yellow-400 shadow-lg shadow-yellow-500/20"
+              : "bg-slate-900/80 text-white border-white/10 hover:bg-slate-800"
+          }`}
+        >
+          3D Blueprint
+        </button>
+      </div>
 
-        {/* Villa Model */}
-        <Villa activeTag={activeTag} setActiveTag={setActiveTag} />
+      {viewMode === "render" ? (
+        <RenderView activeTag={activeTag} setActiveTag={setActiveTag} />
+      ) : (
+        <Canvas
+          shadows
+          camera={{ position: [6, 4, 8], fov: 42 }}
+          className="w-full h-full cursor-grab active:cursor-grabbing"
+        >
+          {/* Lights */}
+          <ambientLight intensity={1.2} />
+          <directionalLight
+            position={[10, 15, 10]}
+            intensity={2.0}
+            castShadow
+            shadow-mapSize-width={2048}
+            shadow-mapSize-height={2048}
+            shadow-bias={-0.0001}
+          />
+          <pointLight position={[-10, 8, -10]} intensity={0.5} />
 
-        {/* Orbit Controls to manipulate camera */}
-        <OrbitControls
-          enableZoom={true}
-          enablePan={false}
-          minDistance={5}
-          maxDistance={14}
-          maxPolarAngle={Math.PI / 2 - 0.05} // prevent going underground
-          makeDefault
-          autoRotate={isRotating && !activeTag}
-          autoRotateSpeed={1.5}
-        />
-      </Canvas>
+          {/* Villa Model */}
+          <Villa activeTag={activeTag} setActiveTag={setActiveTag} />
+
+          {/* Orbit Controls to manipulate camera */}
+          <OrbitControls
+            enableZoom={true}
+            enablePan={false}
+            minDistance={5}
+            maxDistance={14}
+            maxPolarAngle={Math.PI / 2 - 0.05} // prevent going underground
+            makeDefault
+            autoRotate={isRotating && !activeTag}
+            autoRotateSpeed={1.5}
+          />
+        </Canvas>
+      )}
 
       {/* Interactive Helper Overlay Info */}
-      <div className="absolute top-4 left-4 pointer-events-none bg-black/60 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 text-left">
+      <div className="absolute top-4 left-4 pointer-events-none bg-black/60 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 text-left z-20">
         <h3 className="text-xs font-bold text-yellow-400 uppercase tracking-wider">
-          Interactive 3D Blueprint
+          {viewMode === "render" ? "Realistic 3D Render" : "Interactive 3D Blueprint"}
         </h3>
         <p className="text-[10px] text-slate-300 mt-0.5">
-          Drag to rotate model • Click tags 1-4 for details
+          {viewMode === "render"
+            ? "Hover to tilt • Click tags 1-4 for details"
+            : "Drag to rotate model • Click tags 1-4 for details"}
         </p>
       </div>
 
       {/* Rotation Toggle */}
-      <button
-        onClick={() => setIsRotating(!isRotating)}
-        className="absolute bottom-4 right-4 z-20 px-3 py-1.5 text-xs bg-slate-900/80 hover:bg-yellow-400 hover:text-black border border-white/15 rounded-lg transition-all font-semibold flex items-center gap-1.5"
-      >
-        <span>{isRotating ? "⏸ Pause Autorotate" : "▶ Rotate"}</span>
-      </button>
+      {viewMode === "blueprint" && (
+        <button
+          onClick={() => setIsRotating(!isRotating)}
+          className="absolute bottom-4 right-4 z-20 px-3 py-1.5 text-xs bg-slate-900/80 hover:bg-yellow-400 hover:text-black border border-white/15 rounded-lg transition-all font-semibold flex items-center gap-1.5"
+        >
+          <span>{isRotating ? "⏸ Pause Autorotate" : "▶ Rotate"}</span>
+        </button>
+      )}
 
       {/* Active tag banner for mobile when canvas overlays are small */}
       {activeTag && (
-        <div className="absolute bottom-4 left-4 right-16 z-15 md:hidden bg-slate-900/95 border border-yellow-400/40 p-3.5 rounded-xl shadow-xl">
+        <div className="absolute bottom-4 left-4 right-16 z-25 md:hidden bg-slate-900/95 border border-yellow-400/40 p-3.5 rounded-xl shadow-xl">
           {activeTag === "1" && (
             <div>
               <h4 className="text-xs font-bold text-yellow-400">1. Premium Structural Glass</h4>
