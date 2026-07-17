@@ -66,8 +66,8 @@ export default function Home() {
             {/* TRUST METRICS */}
             <div className="grid grid-cols-3 gap-6 pt-8">
               {[
-                { label: "Projects", value: "120+" },
-                { label: "Happy Clients", value: "300+" },
+                { label: "Projects", value: "50+" },
+                { label: "Happy Clients", value: "50+" },
                 { label: "Years Experience", value: "2+" },
               ].map((stat, i) => (
                 <div
